@@ -3,16 +3,6 @@ const MatchesServices = require('./matches-service');
 
 const matchesRouter = express.Router();
 
-// matchesRouter 
-//   .get('/', (req, res) => {
-//     MatchesServices.getMatches(req.app.get('db'))
-//       .then(matches => {
-//         res
-//           .status(200)
-//           .json(matches)
-//       })
-//     });
-
 matchesRouter 
   .get('/', (req, res, next) => {
     return MatchesServices.getMatches(req.app.get('db'))

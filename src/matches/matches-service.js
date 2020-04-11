@@ -1,4 +1,3 @@
-
 const MatchesServices = {
   getMatches(db) {
     return db
@@ -39,11 +38,11 @@ const MatchesServices = {
 
       return this.getSportById(db, match.sport_id)
       .then(sport_name => {
-        sportName = sport_name
+        sportName = sport_name;
 
         return this.getLeagueById(db, match.league_id)
         .then(league_name => {
-          leagueName = league_name
+          leagueName = league_name;
 
           return this.getTeamById(db, match.home_team_id)
           .then(homeTeamName => {
@@ -60,10 +59,10 @@ const MatchesServices = {
                 start_time: match.match_start,
                 home_team: homeTeam,
                 away_team: awayTeam, 
-                home_odd: match.away_team_price,
+                home_odd: match.home_team_price,
                 away_odd: match.away_team_price
-              }
-              return serializedMatch
+              };
+              return serializedMatch;
             })
           })
         })
@@ -75,14 +74,12 @@ const MatchesServices = {
     let promises = matches.map(match => {
       return this.serializeMatch(db, match)
       .then(match => match)
-      .catch(error => console.log(err))
+      .catch(error => console.log(error))
     })
 
     return Promise.all(promises)
     .then(matches => matches)
-    .catch ((error) => {
-      console.log('Error: ', error);
-   })   
+    .catch (error => console.log(error))
   },
   matchesApiFormat(serializedMatches) {
     let apiFormatedMatches = {};
@@ -93,15 +90,14 @@ const MatchesServices = {
 
       if (!apiFormatedMatches[sportName]) {
         apiFormatedMatches[sportName] = {leagues: {}}
-      }
+      };
       if (!apiFormatedMatches[sportName].leagues[leagueName]) {
         apiFormatedMatches[sportName].leagues[leagueName] = []
       };
       apiFormatedMatches[sportName].leagues[leagueName].push(match);
-    })
-    console.log("apiFormatedMatches", apiFormatedMatches)
+    });
     return apiFormatedMatches;
-  }
+  },
 }
 
 module.exports = MatchesServices;
