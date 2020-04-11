@@ -35,7 +35,8 @@ function cleanTables(db) {
         leagues,
         matches,
         bets,
-        teams
+        teams,
+        league_teams
       RESTART IDENTITY CASCADE;
       `
     )
@@ -58,9 +59,39 @@ function makeAuthHeader(user, secret = config.JWT_SECRET) {
   return `Bearer ${token}`;
 };
 
+function seedData(db) {
+  return db.transaction(trx =>
+    trx.raw(`
+    BEGIN;
+    TRUNCATE
+    users,
+    sports,
+    leagues,
+    matches,
+    bets,
+    teams
+    RESTART IDENTITY CASCADE; 
+    INSERT INTO sports (sport_name) VALUES ('Soccer');
+    INSERT INTO leagues (league_name, sport_id) VALUES ('Premier League', 1);
+    INSERT INTO teams (team_name, team_ranking) VALUES 
+      ('Liverpool', 1),
+      ('Man. City', 2)
+    ;
+    INSERT INTO league_teams (league_id, team_id) VALUES (1, 1);
+    INSERT INTO league_teams (league_id, team_id) VALUES (1, 2);
+  `)
+  )
+}
+
+function addMatch(db, match) {
+  return db.into('matches').insert(match);
+}
+
 module.exports = {
   makeUsersArray,
   cleanTables,
   makeAuthHeader,
   seedUsers,
+  seedData,
+  addMatch,
 };

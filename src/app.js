@@ -7,6 +7,8 @@ const { NODE_ENV } = require('./config');
 const {CLIENT_ORIGIN} = require('./config');
 const authRouter = require('./auth/auth-router');
 const usersRouter = require('./users/users-router');
+const matchesRouter = require('./matches/matches-router');
+
 
 const app = express();
 
@@ -16,14 +18,11 @@ const morganOption = (NODE_ENV === 'production')
 
 app.use(morgan(morganOption));
 app.use(helmet());
-app.use(
-  cors({
-    origin: CLIENT_ORIGIN
-  })
-);
+app.use(cors({ origin: CLIENT_ORIGIN }));
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/matches', matchesRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello, world!');
