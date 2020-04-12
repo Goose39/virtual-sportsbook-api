@@ -1,7 +1,7 @@
 const knex = require('knex');
 const app = require('./app');
 require('./helpers/generateMatch');
-require('./helpers/settleBets');
+const settleBets = require('./helpers/settleBets');
 const resultMatches = require('./helpers/resultMatches');
 
 const { PORT, DATABASE_URL } = require('./config');
@@ -18,26 +18,25 @@ app.listen(PORT, () => {
 });
 
 const CronJob = require('cron').CronJob;
-
-const createNewMatch = new CronJob('0 0,15,30,45 * * * * ', function() {
+// Matches created every 15min
+const createNewMatchCron = new CronJob('0 0,15,30,45 * * * * ', function() {
 	const d = new Date();
   console.log('new match created', d);
   generateMatch(db);
 });
-
-//0 1,16,31,46 * * * *
-const resultMatchesCron = new CronJob('0 * * * * *', function() {
+// Matches resulted every 15min, 1 min off creation time
+const resultMatchesCron = new CronJob('0 1,16,31,46 * * * *', function() {
   const d = new Date();
   console.log('matches resulted', d);
   resultMatches(db);
 });
-
-const settleBets = new CronJob('0 2,17,32,47 * * * *', function() {
+// Matches settled every 15min, 1 min off resulting time
+const settleBetsCron = new CronJob('0 2,17,32,47 * * * *', function() {
   const d = new Date();
   console.log('bets settled', d);
-  // settleBets(db);
+  settleBets(db);
 });
-
-createNewMatch.start();
+//Start cron jobs
+createNewMatchCron.start();
 resultMatchesCron.start();
-settleBets.start();
+settleBetsCron.start();

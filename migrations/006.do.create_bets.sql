@@ -7,5 +7,6 @@ CREATE TABLE bets (
   team_id INTEGER NOT NULL,
   FOREIGN KEY (team_id) REFERENCES teams (team_id),
   price REAL NOT NULL,
-  date_created TIMESTAMP DEFAULT now() NOT NULL
+  date_created TIMESTAMP DEFAULT now() NOT NULL,
+  bet_status TEXT DEFAULT 'Open' NOT NULL
 );
