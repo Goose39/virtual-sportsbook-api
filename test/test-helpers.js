@@ -43,6 +43,17 @@ function cleanTables(db) {
   );
 };
 
+function cleanBets(db) {
+  return db.transaction(trx =>
+    trx.raw(
+      `TRUNCATE
+        bets
+        ;
+      `
+    )
+  );
+};
+
 function seedUsers(db, users) {
   const preppedUsers = users.map(user => ({
     ...user,
@@ -52,7 +63,7 @@ function seedUsers(db, users) {
 };
 
 function makeAuthHeader(user, secret = config.JWT_SECRET) {
-  const token = jwt.sign({ id: user.id }, secret, {
+  const token = jwt.sign({ user_id: user.user_id }, secret, {
     subject: user.user_name,
     algorithm: 'HS256',
   });
@@ -79,6 +90,16 @@ function seedData(db) {
     ;
     INSERT INTO league_teams (league_id, team_id) VALUES (1, 1);
     INSERT INTO league_teams (league_id, team_id) VALUES (1, 2);
+    INSERT INTO matches (
+      match_id,
+      match_start,
+      sport_id, 
+      league_id, 
+      home_team_id, 
+      home_team_price, 
+      away_team_id, 
+      away_team_price) 
+    VALUES ('9607943a-1780-4cda-891c-86b040a0573f','2020-04-11 12:00:00', 1, 1, 1, 1.9, 2, 1.9);
   `)
   )
 }
@@ -94,4 +115,5 @@ module.exports = {
   seedUsers,
   seedData,
   addMatch,
+  cleanBets
 };

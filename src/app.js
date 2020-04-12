@@ -8,6 +8,7 @@ const {CLIENT_ORIGIN} = require('./config');
 const authRouter = require('./auth/auth-router');
 const usersRouter = require('./users/users-router');
 const matchesRouter = require('./matches/matches-router');
+const betsRouter = require('./bets/bets-router');
 
 
 const app = express();
@@ -23,6 +24,7 @@ app.use(cors({ origin: CLIENT_ORIGIN }));
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/matches', matchesRouter);
+app.use('/api/bets', betsRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello, world!');

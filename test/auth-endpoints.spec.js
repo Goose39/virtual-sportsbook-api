@@ -4,7 +4,7 @@ const config = require('../src/config');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe.skip('Auth Endpoints', function() {
+describe('Auth Endpoints', function() {
   let db;
 
   const testUsers = helpers.makeUsersArray();

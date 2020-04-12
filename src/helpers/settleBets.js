@@ -31,10 +31,10 @@ const BetSettlementServices = {
     .into('bets')
     .where({"bet_id": bet.bet_id})
     .update({bet_status})
-    .then(bets => {
+    .then(res => {
       if (bet_status = 'win') {
         return this.payoutWinningBet(db, bet)
-        .then(bet => {
+        .then(response => {
           console.log(`Bet id: ${bet.bet_id} settled`)
         }) 
       } else {
@@ -48,7 +48,6 @@ settleOpenBets = (db) => {
 
   return BetSettlementServices.getUnsettledBets(db)
   .then( bets => {
-    console.log(bets)
     let promises = bets.map(bet => {
       if (bet.team_id === bet.match_winner) {
         return BetSettlementServices.insertBetResult(db, bet, 'win')
