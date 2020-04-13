@@ -58,7 +58,9 @@ const MatchesServices = {
                 matchId: match.match_id,
                 start_time: match.match_start,
                 home_team: homeTeam,
+                home_team_id: match.home_team_id,
                 away_team: awayTeam, 
+                away_team_id: match.away_team_id,
                 home_odd: match.home_team_price,
                 away_odd: match.away_team_price
               };

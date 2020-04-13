@@ -11,7 +11,6 @@ const BetsServices = {
     .insert(bet)
     .returning('bet_id')
     .then(id => {
-      console.log(`new bet created. bet id: ${id[0]}`)
       return this.getBetById(db, id[0]);
     })
   }, 
@@ -21,6 +20,25 @@ const BetsServices = {
       .from('bets')
       .where({bet_id})
       .then(res => res[0])
+  },
+  updateUserBalance(db, user_id, bet) {
+    return this.getUserBalance(db, user_id)
+    .then(balance => {
+      let newBalance = (balance-bet).toFixed(2);
+      return db
+      .select('*')
+      .from('users')
+      .where({user_id})
+      .update({'user_balance': newBalance})
+      .then(res => res)
+    })
+  },
+  getUserBalance(db, user_id) {
+    return db
+    .from('users')
+    .select('user_balance')
+    .where({user_id})
+    .then(balance => balance[0].user_balance)
   },
 }
 

@@ -37,12 +37,14 @@ betsRouter
 
     return BetsServices.insertBet(req.app.get('db'), req.body)
       .then(bet => {
-        console.log("bet",bet)
-        res
+        return BetsServices.updateUserBalance(req.app.get('db'), user_id, bet_stake)
+        .then( response => {
+          res
           .status(201)
           .json(bet)
           .end()
         })
+      })
       .catch(next)
     });
 
