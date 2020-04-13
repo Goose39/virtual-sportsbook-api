@@ -5,18 +5,21 @@ const jwt = require('jsonwebtoken');
 function makeUsersArray() {
   return [
     {
+      user_id: 1,
       user_name: 'test-user-1',
       full_name: 'Test user 1',
       password: 'P@55word',
       user_balance: 10000,
     },
     {
+      user_id: 2,
       user_name: 'test-user-2',
       full_name: 'Test user 2',
       password: 'P@55word',
       user_balance: 10000,
     },
     {
+      user_id: 3,
       user_name: 'test-user-3',
       full_name: 'Test user 3',
       password: 'P@55word',

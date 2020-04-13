@@ -1,6 +1,5 @@
 const knex = require('knex');
 const app = require('../src/app');
-const moment = require('moment');
 const helpers = require('./test-helpers');
 
 describe('Matches Endpoint', function() {
@@ -82,8 +81,10 @@ describe('Matches Endpoint', function() {
                       {
                         away_odd: 1.9,
                         away_team: "Man. City",
+                        away_team_id: 2,
                         home_odd: 1.9,
                         home_team: "Liverpool",
+                        home_team_id: 1,
                         league: "Premier League",
                         matchId: "b5c8d620-32cb-42e7-8ce5-aade64d828fc",
                         sport: "Soccer",

@@ -1,9 +1,15 @@
 const BetsServices = {
   getUserBets(db, user_id) {
     return db
-      .select('*')
       .from('bets')
       .where({user_id})
+      .join('matches', 'matches.match_id', '=', 'bets.match_id')
+      .join('teams', 'matches.home_team_id', '=', 'teams.team_id')
+      // .the({
+      //   return db
+      // })
+      // .join('teams')
+      // .select('bets.bet_id, matches.home_team, matches.away_team')
   },
   insertBet(db, bet) {
     return db

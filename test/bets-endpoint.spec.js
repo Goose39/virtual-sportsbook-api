@@ -1,6 +1,4 @@
 const knex = require('knex');
-const bcrypt = require('bcryptjs');
-const config = require('../src/config');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
@@ -110,7 +108,7 @@ beforeEach('insert user', () => {
 
       it('responds with empty array', () => {
         return supertest(app)
-        .get('/api/bets')
+        .get('/api/bets/25')
         .set('Authorization',validAuthHeader)
         .send({'user_id':25})
         .expect(200)
@@ -127,7 +125,7 @@ beforeEach('insert user', () => {
       it('responds with user bets', () => {
 
         return supertest(app)
-        .get('/api/bets')
+        .get(`/api/bets/1`)
         .set('Authorization',validAuthHeader)
         .send({'user_id':1})
         .expect(200)
@@ -135,7 +133,8 @@ beforeEach('insert user', () => {
           expect(res.body[0].user_id).to.eql(1)
           expect(res.body[0].bet_stake).to.eql(100)
           expect(res.body[0].match_id).to.eql("9607943a-1780-4cda-891c-86b040a0573f")
-          expect(res.body[0].team_id).to.eql(2)
+          expect(res.body[0].team_id).to.eql(1)
+          expect(res.body[0].team_name).to.eql('Liverpool')
           expect(res.body[0].price).to.eql(1.2)
         })
 

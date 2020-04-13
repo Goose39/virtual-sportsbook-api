@@ -75,7 +75,7 @@ describe('Auth Endpoints', function() {
         password: testUser.password,
       };
       const expectedToken = jwt.sign(
-        { user_id: testUser.id },
+        { user_name: testUser.user_name, user_id: testUser.user_id },
         config.JWT_SECRET,
         {
           subject: testUser.user_name,
@@ -86,6 +86,7 @@ describe('Auth Endpoints', function() {
         .post('/api/auth/login')
         .send(userValidCreds)
         .expect(200, {
+          user_balance: testUser.user_balance,
           authToken: expectedToken,
         });
     });

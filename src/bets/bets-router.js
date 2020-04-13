@@ -6,8 +6,8 @@ const betsRouter = express.Router();
 const jsonBodyParser = express.json();
 
 betsRouter 
-  .get('/', jsonBodyParser, requireAuth, (req, res, next) => {
-    const { user_id } = req.body;
+  .get('/:user_id', requireAuth, (req, res, next) => {
+    const user_id = req.params.user_id;
 
     if (user_id == null )
         return res.status(400).json({
