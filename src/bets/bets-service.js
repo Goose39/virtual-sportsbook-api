@@ -3,13 +3,7 @@ const BetsServices = {
     return db
       .from('bets')
       .where({user_id})
-      .join('matches', 'matches.match_id', '=', 'bets.match_id')
-      .join('teams', 'matches.home_team_id', '=', 'teams.team_id')
-      // .the({
-      //   return db
-      // })
-      // .join('teams')
-      // .select('bets.bet_id, matches.home_team, matches.away_team')
+      .join('teams', 'bets.team_id', '=', 'teams.team_id')
   },
   insertBet(db, bet) {
     return db
@@ -36,6 +30,7 @@ const BetsServices = {
       .from('users')
       .where({user_id})
       .update({'user_balance': newBalance})
+      .returning('user_balance')
       .then(res => res)
     })
   },
@@ -46,6 +41,7 @@ const BetsServices = {
     .where({user_id})
     .then(balance => balance[0].user_balance)
   },
+
 }
 
 module.exports = BetsServices;

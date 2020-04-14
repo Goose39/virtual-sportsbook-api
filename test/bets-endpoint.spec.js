@@ -48,7 +48,7 @@ beforeEach('insert user', () => {
 
     context(`Bet Validation`, () => {
 
-      const requiredFields = ['user_id', 'bet_stake', 'match_id', 'team_id', 'price'];
+      const requiredFields = ['user_id', 'bet_stake', 'match_id', 'team_id', 'price', 'match_desc'];
 
       requiredFields.forEach(field => {
 
@@ -57,7 +57,8 @@ beforeEach('insert user', () => {
           bet_stake: 100,
           match_id: "9607943a-1780-4cda-891c-86b040a0573f",
           team_id: 2,
-          price: 1.2
+          price: 1.2,
+         match_desc: "Liverpool v Man. City"
         }
 
         it(`responds with 400 required error when '${field}' is missing`, () => {
@@ -81,22 +82,25 @@ beforeEach('insert user', () => {
         bet_stake: 100,
         match_id: "9607943a-1780-4cda-891c-86b040a0573f",
         team_id: 2,
-        price: 1.2
+        price: 1.2, 
+        match_desc: "Liverpool v Man. City"
       }
 
-      it(`responds 201, check db entry`, () => {
+      it(`responds 201, check db entry and balance update`, () => {
         return supertest(app)
         .post('/api/bets')
         .set('Authorization',validAuthHeader)
         .send(dummyBet)
         .expect(201)
         .then(res => {
-          expect(res.body.user_id).to.eql(dummyBet.user_id)
-          expect(res.body.bet_stake).to.eql(dummyBet.bet_stake)
-          expect(res.body.match_id).to.eql(dummyBet.match_id)
-          expect(res.body.team_id).to.eql(dummyBet.team_id)
-          expect(res.body.price).to.eql(dummyBet.price)
-          expect(res.body.bet_status).to.eql("Open")
+          expect(res.body.bet.user_id).to.eql(dummyBet.user_id)
+          expect(res.body.bet.bet_stake).to.eql(dummyBet.bet_stake)
+          expect(res.body.bet.match_id).to.eql(dummyBet.match_id)
+          expect(res.body.bet.team_id).to.eql(dummyBet.team_id)
+          expect(res.body.bet.price).to.eql(dummyBet.price)
+          expect(res.body.bet.match_desc).to.eql(dummyBet.match_desc)
+          expect(res.body.bet.bet_status).to.eql("Open"),
+          expect(res.body.balance).to.eql(9900)
         })
       })
     });
@@ -133,8 +137,8 @@ beforeEach('insert user', () => {
           expect(res.body[0].user_id).to.eql(1)
           expect(res.body[0].bet_stake).to.eql(100)
           expect(res.body[0].match_id).to.eql("9607943a-1780-4cda-891c-86b040a0573f")
-          expect(res.body[0].team_id).to.eql(1)
-          expect(res.body[0].team_name).to.eql('Liverpool')
+          expect(res.body[0].team_id).to.eql(2)
+          expect(res.body[0].team_name).to.eql('Man. City')
           expect(res.body[0].price).to.eql(1.2)
         })
 

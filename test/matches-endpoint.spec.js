@@ -89,6 +89,7 @@ describe('Matches Endpoint', function() {
                         matchId: "b5c8d620-32cb-42e7-8ce5-aade64d828fc",
                         sport: "Soccer",
                         start_time: "2020-05-10T04:00:00.000Z",
+                        match_desc: "Liverpool v Man. City"
                       }
                     ] 
                   } 

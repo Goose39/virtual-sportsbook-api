@@ -62,7 +62,8 @@ const MatchesServices = {
                 away_team: awayTeam, 
                 away_team_id: match.away_team_id,
                 home_odd: match.home_team_price,
-                away_odd: match.away_team_price
+                away_odd: match.away_team_price, 
+                match_desc: `${homeTeam} v ${awayTeam}`
               };
               return serializedMatch;
             })
@@ -99,6 +100,17 @@ const MatchesServices = {
       apiFormatedMatches[sportName].leagues[leagueName].push(match);
     });
     return apiFormatedMatches;
+  },
+  getMatchesSorted(db) {
+    return db
+      .select('*')
+      .from('matches')
+      .where('match_start','>', db.fn.now())
+      .then(res => {
+        let matches = res.slice(0,10);
+        return this.serializeMatches(db, matches)
+        .then(res => res)
+      })
   },
 }
 

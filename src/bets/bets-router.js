@@ -27,9 +27,9 @@ betsRouter
 
 betsRouter 
   .post('/', jsonBodyParser, requireAuth, (req, res, next) => {
-    const { user_id, bet_stake, match_id, team_id, price} = req.body;
+    const { user_id, bet_stake, match_id, team_id, price, match_desc} = req.body;
 
-    for (const field of ['user_id', 'bet_stake', 'match_id', 'team_id', 'price']) 
+    for (const field of ['user_id', 'bet_stake', 'match_id', 'team_id', 'price', 'match_desc']) 
       if (!req.body[field])
         return res.status(400).json({
           error: `Missing '${field}' in request body`
@@ -38,10 +38,13 @@ betsRouter
     return BetsServices.insertBet(req.app.get('db'), req.body)
       .then(bet => {
         return BetsServices.updateUserBalance(req.app.get('db'), user_id, bet_stake)
-        .then( response => {
+        .then( balance => {
           res
           .status(201)
-          .json(bet)
+          .send({
+            bet: bet,
+            balance: balance[0]          
+          })
           .end()
         })
       })

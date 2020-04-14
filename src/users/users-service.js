@@ -41,6 +41,21 @@ const UsersService = {
       date_created: new Date(user.date_created),
     }
   },
+  getUserBalance(db, user_id) {
+    return db
+      .from('users')
+      .select('user_balance')
+      .where({user_id})
+      .then(res => {
+        return res[0]
+      })
+  }, 
+  updateUserBalance(db, user_id, user_balance) {
+    return db('users')
+      .where({user_id})
+      .update({user_balance})
+      .returning('user_balance') 
+  }
 };
 
 module.exports = UsersService;

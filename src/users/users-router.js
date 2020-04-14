@@ -1,4 +1,5 @@
 const express = require('express');
+const { requireAuth } = require('../middleware/jwt-auth');
 const UsersService = require('./users-service');
 
 const usersRouter = express.Router();
@@ -49,5 +50,38 @@ usersRouter
       })
       .catch(next)
   });
+
+  usersRouter 
+  .get('/:user_id/balance', requireAuth, (req, res, next) => {
+    const user_id = req.params.user_id;
+
+    if (user_id == null )
+        return res.status(400).json({
+          error: `Missing 'user_id' in request body`
+        });
+
+    return UsersService.getUserBalance(req.app.get('db'), user_id)
+      .then(balance => {
+            res
+            .status(200)
+            .json(balance)
+            .end()
+        })
+        .catch(next)
+      });
+
+  usersRouter 
+  .patch('/:user_id/balance', jsonBodyParser, requireAuth, (req, res, next) => {
+
+    return UsersService.updateUserBalance(req.app.get('db'), user_id, user_balance)
+      .then(balance => {
+        console.log(balance)
+            res
+            .status(200)
+            .json(balance)
+            .end()
+        })
+        .catch(next)
+      });
 
 module.exports = usersRouter;
