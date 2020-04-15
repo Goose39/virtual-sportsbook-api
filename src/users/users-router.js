@@ -72,9 +72,11 @@ usersRouter
 
   usersRouter 
   .patch('/:user_id/balance', jsonBodyParser, requireAuth, (req, res, next) => {
-
-    return UsersService.updateUserBalance(req.app.get('db'), user_id, user_balance)
+    const user_id = req.params.user_id;
+    
+    return UsersService.reloadUserBalance(req.app.get('db'), user_id)
       .then(balance => {
+        console.log("-----User balance------")
         console.log(balance)
             res
             .status(200)

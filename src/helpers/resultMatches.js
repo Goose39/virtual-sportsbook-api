@@ -58,7 +58,7 @@ resultMatches = (db) => {
     
     let promises = matches.map(match => {
       return resultMatch(db, match)
-      .then(match => match)
+      .then(match => console.log(`Match ${match.match_id} resulted`))
       .catch(error => console.log(error))
     })
   

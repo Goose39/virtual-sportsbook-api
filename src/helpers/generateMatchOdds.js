@@ -19,8 +19,8 @@ const generateOdds = function(home, away, db) {
   const awayRank = away.team_ranking;
 
   //Calc difference in rankings/strength
-  // Option 1: for data sets with more than 30 ranking spots [e.g.Golf, Soccer]
-  //let teamDiff = Math.abs(Math.floor((homeRank - 1 - awayRank)));
+  // Option 1: for data sets with more than 30 ranking spots [e.g.Golf, Cycling]
+  //let teamDiff = Math.abs(Math.floor((homeRank - awayRank)));
    // Option 2: for limited/test data sets with less than 30 ranking spots
   let teamDiff = Math.ceil(Math.pow((homeRank - 1 - awayRank), 2)*0.75);
 

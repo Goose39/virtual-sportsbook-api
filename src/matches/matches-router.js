@@ -23,7 +23,6 @@ matchesRouter
   .get('/upcoming', (req, res, next) => {
     return MatchesServices.getMatchesSorted(req.app.get('db'))
       .then(matches => {
-        console.log(matches)
         res
         .status(200)
         .json(matches)

@@ -42,8 +42,7 @@ const UsersService = {
     }
   },
   getUserBalance(db, user_id) {
-    return db
-      .from('users')
+    return db('users')
       .select('user_balance')
       .where({user_id})
       .then(res => {
@@ -55,6 +54,15 @@ const UsersService = {
       .where({user_id})
       .update({user_balance})
       .returning('user_balance') 
+  },
+  reloadUserBalance(db, user_id) {
+    return this.getUserBalance(db, user_id)
+    .then(res => {
+      if (res.user_balance <= 0 ) {
+        return this.updateUserBalance(db, user_id, 1000)
+        .then(newBalance => newBalance[0])
+      } else return res.user_balance
+    })
   }
 };
 

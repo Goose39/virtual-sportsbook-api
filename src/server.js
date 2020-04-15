@@ -19,21 +19,22 @@ app.listen(PORT, () => {
 
 const CronJob = require('cron').CronJob;
 // Matches created every 15min
+
 const createNewMatchCron = new CronJob('0 0,15,30,45 * * * * ', function() {
-	const d = new Date();
-  console.log('new match created', d);
+  const d = new Date();
+  console.log('Creating match', d);
   generateMatch(db);
 });
 // Matches resulted every 15min, 1 min off creation time
 const resultMatchesCron = new CronJob('0 1,16,31,46 * * * *', function() {
   const d = new Date();
-  console.log('matches resulted', d);
+  console.log('Resulting matches', d);
   resultMatches(db);
 });
 // Matches settled every 15min, 1 min off resulting time
 const settleBetsCron = new CronJob('0 2,17,32,47 * * * *', function() {
   const d = new Date();
-  console.log('bets settled', d);
+  console.log('Settling bets', d);
   settleBets(db);
 });
 //Start cron jobs

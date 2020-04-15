@@ -46,53 +46,60 @@ const MatchGenerationServices = {
 }
 
 generateMatch = (db) => {
+  console.log("match creation start")
   let leagues = []
 
   return MatchGenerationServices.getLeaguesWithTeams(db)
   .then( res => {
     leagues = res 
+    console.log("leagues", leagues)
 
     //Select Random League
     let randomNum = Math.floor(Math.random()*(leagues.length));
     let matchLeague = leagues[randomNum];
-
+    console.log("matchLeague", matchLeague)
     // Select get team in league
     let teams = [];
     return MatchGenerationServices.getLeagueTeams(db, matchLeague.league_id)
     .then( res => {
       teams = res 
-
+      console.log("teams", teams)
       // Select 2 Random Opponents
       randomNum = Math.floor(Math.random()*(leagues.length));
-      let rand1, rand2;
-
+      let rand1 = 0; 
+      let rand2 = 0;
+      console.log("rand nos", rand1, rand2)
       while (rand1 === rand2) {
         rand1 = Math.floor(Math.random()*(teams.length));
         rand2 = Math.floor(Math.random()*(teams.length));
       } 
-
+      console.log("rand nos", rand1, rand2)
       let home = teams[rand1];
       let away = teams[rand2];
+      console.log("home", home)
+      console.log("away", away)
 
       return MatchGenerationServices.getTeamData(db, home.team_id)
       .then( data => {
         let homeData = data;
+        console.log("homeData", homeData)
         return MatchGenerationServices.getTeamData(db, away.team_id)
         .then( data => {
           let awayData = data;
-
+          console.log("awayData", awayData)
           return generateOdds(homeData, awayData, db)
           .then(odds => {
-
-
+            console.log("odds", odds)
             return MatchGenerationServices.getSportByLeague(db, matchLeague.league_id)
             .then(sportId => {
-              
+              const match_start_time = moment().add(5, 'm')
+              const matchId = uuidv4();
+
               let match = {
-                match_id: uuidv4(),
+                match_id: matchId,
                 sport_id: sportId, 
                 league_id: matchLeague.league_id,
-                match_start: moment().add(1, 'd'),
+                match_start: match_start_time,
                 home_team_id: home.team_id,
                 away_team_id: away.team_id,
                 home_team_price: odds.home_odd,
@@ -100,7 +107,7 @@ generateMatch = (db) => {
               }
     
               return MatchGenerationServices.insertMatch(db, match)
-              .then(res => res)
+              .then(res => console.log(`match ${matchId} created`))
             })
           })
         })
