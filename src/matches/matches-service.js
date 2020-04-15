@@ -24,7 +24,27 @@ const MatchesServices = {
     return db
     .select('*')
     .from('matches')
-    .where('macth_id','=', matchId)
+    .where('match_id','=', matchId)
+    .join('sports', 'matches.sport_id', '=' ,'sports.sport_id')
+    .join('leagues', 'leagues.league_id', '=' ,'matches.sport_id')
+    .then( res => {
+      let match = res[0];
+      return db
+      .select('team_name')
+      .from('teams')
+      .where('team_id','=', match.home_team_id)
+      .then(homeTeam => {
+        match.home_team_name = homeTeam[0].team_name;
+        return db
+        .select('team_name')
+        .from('teams')
+        .where('team_id','=', match.away_team_id)
+        .then(awayTeam => {
+          match.away_team_name = awayTeam[0].team_name;
+          return match
+        })
+      })
+    })
   },
   getTeamById(db, teamId) {
     return db
