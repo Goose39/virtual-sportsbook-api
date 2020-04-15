@@ -65,7 +65,6 @@ generateMatch = (db) => {
       teams = res 
       console.log("teams", teams)
       // Select 2 Random Opponents
-      randomNum = Math.floor(Math.random()*(leagues.length));
       let rand1 = 0; 
       let rand2 = 0;
       console.log("rand nos", rand1, rand2)
@@ -92,7 +91,7 @@ generateMatch = (db) => {
             console.log("odds", odds)
             return MatchGenerationServices.getSportByLeague(db, matchLeague.league_id)
             .then(sportId => {
-              const match_start_time = moment().add(5, 'm')
+              const match_start_time = moment().add(1, 'd')
               const matchId = uuidv4();
 
               let match = {
