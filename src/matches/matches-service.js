@@ -26,7 +26,7 @@ const MatchesServices = {
     .from('matches')
     .where('match_id','=', matchId)
     .join('sports', 'matches.sport_id', '=' ,'sports.sport_id')
-    .join('leagues', 'leagues.league_id', '=' ,'matches.sport_id')
+    .join('leagues', 'leagues.league_id', '=' ,'matches.league_id')
     .then( res => {
       let match = res[0];
       return db
