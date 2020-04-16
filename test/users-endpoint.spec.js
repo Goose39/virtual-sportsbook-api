@@ -6,8 +6,9 @@ const helpers = require('./test-helpers');
 describe('Users Endpoints', function() {
   let db
 
-  const testUsers = helpers.makeUsersArray()
-  const testUser = testUsers[0]
+  const testUsers = helpers.makeUsersArray();
+  const testUser = testUsers[0];
+  const validAuthHeader = helpers.makeAuthHeader(testUser);
 
   before('make knex instance', () => {
     db = knex({
@@ -16,42 +17,39 @@ describe('Users Endpoints', function() {
     });
     app.set('db', db);
   });
-
-  after('disconnect from db', () => db.destroy());
-
   before('cleanup', () => helpers.cleanTables(db));
-
-  afterEach('cleanup', () => helpers.cleanTables(db));
+  before('insert users', () =>
+    helpers.seedUsers(
+      db,
+      testUsers,
+    )
+  );
+  after('cleanup', () => helpers.cleanTables(db));
+  after('disconnect from db', () => db.destroy());
+ 
 
   describe(`POST /api/users`, () => {
 
     context(`User Validation`, () => {
-
-      beforeEach('insert users', () =>
-        helpers.seedUsers(
-          db,
-          testUsers,
-        )
-      );
-
       const requiredFields = ['user_name', 'password', 'full_name'];
 
       requiredFields.forEach(field => {
         const registerAttemptBody = {
-          user_name: 'test user_name',
-          password: 'test password',
-          full_name: 'test full_name',
+          user_id: 5,
+          user_name: 'test-user-5',
+          full_name: 'Test user 5',
+          password: 'P@55word',
         }
 
-        it(`responds with 400 required error when '${field}' is missing`, () => {
-          delete registerAttemptBody[field]
+      it(`responds with 400 required error when '${field}' is missing`, () => {
+        delete registerAttemptBody[field]
 
-          return supertest(app)
-            .post('/api/users')
-            .send(registerAttemptBody)
-            .expect(400, {
-              error: `Missing '${field}' in request body`,
-            })
+        return supertest(app)
+          .post('/api/users')
+          .send(registerAttemptBody)
+          .expect(400, {
+            error: `Missing '${field}' in request body`,
+          })
         })
       });
 
@@ -129,9 +127,11 @@ describe('Users Endpoints', function() {
     });
 
     context(`Happy path`, () => {
+
       it(`responds 201, serialized user, storing bcryped password`, () => {
+        helpers.cleanTables(db)
         const newUser = {
-          user_name: 'test user_name',
+          user_name: 'testy_User',
           password: '11AAaa!!',
           full_name: 'test full_name',
         };
@@ -163,4 +163,68 @@ describe('Users Endpoints', function() {
       });
     });
   });
+
+
+  describe(`GET /api/users/:user_id/balance`, () => {
+
+    context(`Happy path`, () => {
+
+      before('cleanup', () => helpers.cleanTables(db));
+      before('insert users', () =>
+      helpers.seedUsers(
+        db,
+        testUsers,
+        )
+      );
+
+      it(`get user balance`, () => {
+  
+        return supertest(app)
+          .get('/api/users/1/balance')
+          .set('Authorization',validAuthHeader)
+          .expect(200)
+          .expect(res => {
+            expect(res.body.user_balance).to.eql(10000)
+          })
+
+      });
+    });
+  });
+
+  describe(`PATCH /api/users/:user_id/balance`, () => {
+
+    context(`Happy path`, () => {
+      
+      it(`if user already has a balance do not reset to 1000, just return balance to update client`, () => {
+  
+        return supertest(app)
+          .patch('/api/users/1/balance')
+          .set('Authorization',validAuthHeader)
+          .expect(200)
+          .expect(res => {
+            expect(res.body).to.eql(10000)
+          })
+      });
+
+      it(`if balance is 0, reset to 1000`, () => {
+        // User 10 has 0 balance
+      anotherValidAuthHeader = helpers.makeAuthHeader({
+        user_id: 10,
+        user_name: 'test-user-10',
+      })
+
+        return supertest(app)
+          .patch('/api/users/10/balance')
+          .set('Authorization',anotherValidAuthHeader)
+          .expect(200)
+          .expect(res => {
+            expect(res.body).to.eql(1000)
+          })
+      });
+
+    });
+  });
+
+
+
 });

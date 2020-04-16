@@ -76,8 +76,6 @@ usersRouter
     
     return UsersService.reloadUserBalance(req.app.get('db'), user_id)
       .then(balance => {
-        console.log("-----User balance------")
-        console.log(balance)
             res
             .status(200)
             .json(balance)

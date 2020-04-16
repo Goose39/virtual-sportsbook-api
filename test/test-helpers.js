@@ -25,6 +25,13 @@ function makeUsersArray() {
       password: 'P@55word',
       user_balance: 10000,
     },
+    {
+      user_id: 10,
+      user_name: 'test-user-10',
+      full_name: 'Test user 1',
+      password: 'P@55word',
+      user_balance: 0,
+    },
   ]
 };
 
