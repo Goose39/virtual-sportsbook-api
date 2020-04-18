@@ -2,7 +2,7 @@ const express = require('express');
 const MatchesServices = require('./matches-service');
 
 const matchesRouter = express.Router();
-
+// Returns list of all matches that have not yet started
 matchesRouter 
   .get('/', (req, res, next) => {
     return MatchesServices.getMatches(req.app.get('db'))
@@ -18,11 +18,10 @@ matchesRouter
       })
       .catch(next)
     });
-
-    matchesRouter 
+// Returns match data of given match_id
+matchesRouter 
   .get('/match/:match_id', (req, res, next) => {
     const match_id = req.params.match_id;
-
     return MatchesServices.getMatchById(req.app.get('db'), match_id)
       .then(match => {
         res
@@ -32,8 +31,8 @@ matchesRouter
       })
       .catch(next)
     });
-
-    matchesRouter 
+    // Responds with list of 10 matches ending the soonest
+matchesRouter 
   .get('/upcoming', (req, res, next) => {
     return MatchesServices.getMatchesSorted(req.app.get('db'))
       .then(matches => {

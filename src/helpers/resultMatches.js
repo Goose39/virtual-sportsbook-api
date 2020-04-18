@@ -66,7 +66,7 @@ resultMatches = (db) => {
     .then(matches => matches)
     
   })
-  .catch(error => console.log("error resulting matches: ", error))
+  .catch(error => console.log('error resulting matches: ', error))
 }
 
 module.exports = resultMatches;

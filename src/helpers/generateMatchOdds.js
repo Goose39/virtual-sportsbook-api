@@ -10,8 +10,8 @@ const OddsServices = {
 
 const generateOdds = function(home, away, db) {
   let odds = {
-    "home_odd": null,
-    "away_odd": null
+    'home_odd': null,
+    'away_odd': null
   }
 
   //Get home and away rankings

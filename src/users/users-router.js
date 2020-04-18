@@ -8,18 +8,18 @@ const jsonBodyParser = express.json();
 usersRouter
   .post('/', jsonBodyParser, (req, res, next) => {
     const { password, user_name, full_name} = req.body
-
+    // Check required fields
     for (const field of ['full_name', 'user_name', 'password'])
       if (!req.body[field])
         return res.status(400).json({
           error: `Missing '${field}' in request body`
         })
-
+    // Validate password    
     const passwordError = UsersService.validatePassword(password)
 
     if (passwordError)
       return res.status(400).json({ error: passwordError });
-
+    // Check user_name doesnt already exist
     UsersService.hasUserWithUserName(
       req.app.get('db'),
       user_name

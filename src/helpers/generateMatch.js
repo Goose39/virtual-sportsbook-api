@@ -17,12 +17,14 @@ const MatchGenerationServices = {
       .where('sport_id', '=', sportId)
       .then(leagues => leagues)
   },
+  // Leagues that have teams 
   getLeaguesWithTeams(db) {
     return db
       .distinct('league_id')
       .from('league_teams')
       .then(leaguesTeams => leaguesTeams)
   }, 
+   // Teams in that league
   getLeagueTeams(db, leagueId) {
     return db
     .select('team_id')
@@ -30,6 +32,7 @@ const MatchGenerationServices = {
     .where('league_id', '=', leagueId)
     .then(leaguesTeams => leaguesTeams)
   },
+  // Teams data (for match creation incl, rank for odds calcs)
   getTeamData(db, teamId) {
     return db
     .select('*')
@@ -46,7 +49,6 @@ const MatchGenerationServices = {
 }
 
 generateMatch = (db) => {
-  console.log("match creation start")
   let leagues = []
 
   return MatchGenerationServices.getLeaguesWithTeams(db)
@@ -56,7 +58,7 @@ generateMatch = (db) => {
     //Select Random League
     let randomNum = Math.floor(Math.random()*(leagues.length));
     let matchLeague = leagues[randomNum];
-    // Select get team in league
+    // Select two teams in league
     let teams = [];
     return MatchGenerationServices.getLeagueTeams(db, matchLeague.league_id)
     .then( res => {
@@ -99,14 +101,14 @@ generateMatch = (db) => {
               }
     
               return MatchGenerationServices.insertMatch(db, match)
-              .then(res => console.log(`match ${matchId} created`))
+              .then(res => `match ${matchId} created`)
             })
           })
         })
       })
     })
   })
-  .catch(error => console.log("error generating match: ", error))
+  .catch(error => error)
 }
 
 module.exports = generateMatch;

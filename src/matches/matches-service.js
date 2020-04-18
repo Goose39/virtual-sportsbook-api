@@ -20,6 +20,7 @@ const MatchesServices = {
     .where('league_id','=', leagueId)
     .then(league => league[0].league_name)
   },
+  // Get match by Id and serialize match data with required at for client needs
   getMatchById(db, matchId) {
     return db
     .select('*')
@@ -53,6 +54,7 @@ const MatchesServices = {
     .where('team_id','=', teamId)
     .then(team => team[0].team_name)
   },
+  // Format match data for client 
   serializeMatch(db, match) {
     let sportName, leagueName, homeTeam, awayTeam;
 
@@ -92,6 +94,7 @@ const MatchesServices = {
       })
       
   },
+  // Create promise array of all matches to be serialized
   serializeMatches(db, matches) {
     
     let promises = matches.map(match => {
@@ -104,6 +107,7 @@ const MatchesServices = {
     .then(matches => matches)
     .catch (error => console.log(error))
   },
+  // Format match match list tree for client (Sports >> Leagues >> Matches)
   matchesApiFormat(serializedMatches) {
     let apiFormatedMatches = {};
     
@@ -121,6 +125,7 @@ const MatchesServices = {
     });
     return apiFormatedMatches;
   },
+  // Response with 10 matches from chronologically sorted matches 
   getMatchesSorted(db) {
     return db
       .select('*')

@@ -29,7 +29,7 @@ const BetSettlementServices = {
   insertBetResult(db, bet, bet_status) {
     return db
     .into('bets')
-    .where({"bet_id": bet.bet_id})
+    .where({'bet_id': bet.bet_id})
     .update({bet_status})
     .then(res => {
       if (bet_status = 'win') {
@@ -45,7 +45,6 @@ const BetSettlementServices = {
 }
 
 settleOpenBets = (db) => {
-
   return BetSettlementServices.getUnsettledBets(db)
   .then( bets => {
     let promises = bets.map(bet => {
@@ -58,12 +57,10 @@ settleOpenBets = (db) => {
         .then(bet => bet)
       }
     })
-  
     return Promise.all(promises)
     .then(bet => bet)
-    
   })
-  .catch(error => console.log("error resulting matches: ", error))
+  .catch(error => console.log('error resulting matches: ', error))
 }
 
 module.exports = settleOpenBets;

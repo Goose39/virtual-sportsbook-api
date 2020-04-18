@@ -49,12 +49,14 @@ const UsersService = {
         return res[0]
       })
   }, 
+  // Update user balance (On place bet and bet settlement)
   updateUserBalance(db, user_id, user_balance) {
     return db('users')
       .where({user_id})
       .update({user_balance})
       .returning('user_balance') 
   },
+  // Reload user balance with 1000
   reloadUserBalance(db, user_id) {
     return this.getUserBalance(db, user_id)
     .then(res => {

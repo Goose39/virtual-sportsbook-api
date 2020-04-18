@@ -4,7 +4,7 @@ const { requireAuth } = require('../middleware/jwt-auth');
 
 const betsRouter = express.Router();
 const jsonBodyParser = express.json();
-
+// (GET) Player bet history 
 betsRouter 
   .get('/:user_id', requireAuth, (req, res, next) => {
     const user_id = req.params.user_id;
@@ -24,10 +24,10 @@ betsRouter
         .catch(next)
       });
       
-
+// (POST) To place bets 
 betsRouter 
   .post('/', jsonBodyParser, requireAuth, (req, res, next) => {
-    const { user_id, bet_stake, match_id, team_id, price, match_desc} = req.body;
+    const { user_id, bet_stake } = req.body;
 
     for (const field of ['user_id', 'bet_stake', 'match_id', 'team_id', 'price', 'match_desc']) 
       if (!req.body[field])
